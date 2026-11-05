@@ -112,6 +112,8 @@ input::placeholder, textarea::placeholder { color: #6d757e }
 .qrbox img { width: min(300px, 100%); aspect-ratio: 1; border-radius: 14px; background: #fff; display: block; max-width: 100% }
 .qrbox .amt { font-family: var(--font-display); font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums }
 .qrbox .acct { font-size: 14px; color: var(--muted) }
+.qrbox .save { width: min(300px, 100%) }
+.qrbox .hint { font-size: 14px; color: var(--muted); margin: 0 }
 .howpay { margin: 0; padding-left: 20px; font-size: 14px; color: var(--muted); display: grid; gap: 2px; text-align: left; justify-self: stretch }
 .code { font-family: var(--font-display); font-weight: 700; letter-spacing: .06em; color: var(--fg); background: var(--surface-2); border-radius: 8px; padding: 1px 8px }
 .btn { border-radius: 12px; padding: 12px 18px; min-height: 50px; cursor: pointer; border: 1px solid var(--line); background: var(--surface-2); font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: var(--fg); text-align: center }
@@ -182,7 +184,7 @@ details > summary { cursor: pointer; color: var(--cyan); font-size: 14px }
     <h2>ສະແກນຈ່າຍດ້ວຍ BCEL One</h2>
     <div id="qrWrap" class="qrbox"></div>
     <ol class="howpay">
-      <li>ແຄັບໜ້າຈໍ QR ນີ້ ຫຼື ສະແກນຈາກອີກເຄື່ອງ</li>
+      <li>ກົດ <b>ບັນທຶກຮູບ QR</b> (ຫຼື ແຄັບໜ້າຈໍ) ຫຼື ສະແກນຈາກອີກເຄື່ອງ</li>
       <li>ເປີດ BCEL One → ສະແກນ QR → ເລືອກຮູບຈາກຄັງຮູບ</li>
       <li>ຍອດເງິນຈະຂຶ້ນໃຫ້ອັດຕະໂນມັດ, ກວດຊື່ບັນຊີ <b>Vongsavanh Vannha</b> ແລ້ວກົດຢືນຢັນ</li>
       <li>ແຄັບສະລິບໄວ້ ເພື່ອສົ່ງໃຫ້ຮ້ານ</li>
@@ -289,6 +291,36 @@ function qrPayload(amount) {
   const body = out.map(([t, v]) => t + String(v.length).padStart(2, "0") + v).join("") + "6304";
   return body + crc16(body);
 }
+/* Save the QR as a photo. Inside the claude.ai frame downloads are blocked, so there we only explain long-press. */
+const FRAMED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+let qrFile = null;
+function prepQrFile(src, amount) {
+  qrFile = null;
+  const im = new Image();
+  im.onload = () => {
+    const w = im.width, pad = Math.round(w * 0.06), h = w + Math.round(w * 0.26);
+    const c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d");
+    g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h); g.drawImage(im, 0, 0, w, w);
+    g.fillStyle = "#000000"; g.textAlign = "center";
+    g.font = `700 ${Math.round(w * 0.075)}px system-ui, sans-serif`;
+    g.fillText(Math.round(amount).toLocaleString("en-US") + " LAK", w / 2, w + Math.round(w * 0.06));
+    g.fillStyle = "#555555"; g.font = `${Math.round(w * 0.042)}px system-ui, sans-serif`;
+    g.fillText("Vongsavanh Vannha · BCEL One", w / 2, w + Math.round(w * 0.06) + pad + Math.round(w * 0.02));
+    c.toBlob(b => { if (b && lastQR === amount) qrFile = new File([b], `RushUp-QR-${Math.round(amount)}.png`, { type: "image/png" }); }, "image/png");
+  };
+  im.src = src;
+}
+async function saveQr() {
+  if (!qrFile) return toast("ກຳລັງກຽມຮູບ · ລອງໃໝ່ອີກຄັ້ງ");
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [qrFile] })) { await navigator.share({ files: [qrFile] }); return; }
+  } catch (e) { if (e && e.name === "AbortError") return; }
+  const a = document.createElement("a"), u = URL.createObjectURL(qrFile);
+  a.href = u; a.download = qrFile.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 4000);
+  toast("ບັນທຶກຮູບ QR ແລ້ວ · ເປີດ BCEL One ແລ້ວເລືອກຮູບຈາກຄັງຮູບ");
+}
+document.addEventListener("click", e => { if (e.target.closest("#saveQr")) saveQr(); });
 function qrImage(amount) {
   if (!window.qrcode) return null;
   const q = qrcode(0, "H"); q.addData(qrPayload(amount)); q.make();
@@ -347,8 +379,11 @@ function renderCart() {
     lastQR = t;
     if (t > 0) {
       const src = qrImage(t);
-      $("#qrWrap").innerHTML = src ? `<img src="${src}" alt="LaoQR ຈ່າຍ ${kip(t)}"><span class="amt">${kip(t)}</span><span class="acct">Vongsavanh Vannha · BCEL One</span>`
+      $("#qrWrap").innerHTML = src ? `<img src="${src}" alt="LaoQR ຈ່າຍ ${kip(t)}"><span class="amt">${kip(t)}</span><span class="acct">Vongsavanh Vannha · BCEL One</span>${FRAMED
+        ? `<p class="hint">ກົດຄ້າງທີ່ຮູບ QR ແລ້ວເລືອກ ບັນທຶກຮູບ (Save Image)</p>`
+        : `<button type="button" class="btn primary save" id="saveQr">⬇ ບັນທຶກຮູບ QR</button>`}`
         : `<p class="err">ໂຫຼດ QR ບໍ່ສຳເລັດ · ກະລຸນາລອງໃໝ່ ຫຼື ຂໍ QR ຈາກຮ້ານທາງ WhatsApp</p>`;
+      prepQrFile(src, t);
     } else $("#qrWrap").innerHTML = `<div class="empty" style="justify-self:stretch">QR ພ້ອມຍອດເງິນຈະຂຶ້ນ ເມື່ອເລືອກສິນຄ້າແລ້ວ</div>`;
   }
   renderOrder();
