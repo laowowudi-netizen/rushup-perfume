@@ -1,0 +1,5 @@
+# Raw stock-app export: contains cost and profit, never commit it
+build/data/
+build/site/
+build/rushup-order.html
+node_modules/

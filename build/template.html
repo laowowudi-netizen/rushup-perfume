@@ -1,0 +1,520 @@
+<title>Rush Up Perfume Order</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+Lao:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: brand header → how-to strip → scent list (tap a size to add) → checkout (cart, details, amount QR, WhatsApp) with a bottom cart bar.
+   Deliberately single-theme: the Rush Up brand is white + cyan on black, matching the shop's stock app. */
+:root {
+  color-scheme: dark;
+  --bg: #07080a;
+  --surface: rgb(18 20 23 / .9);
+  --surface-2: #1b1e23;
+  --edge: rgb(25 227 236 / .22);
+  --photo: #ffffff;
+  --line: #262a30;
+  --fg: #f4f6f8;
+  --muted: #9aa3ad;
+  --cyan: #19e3ec;
+  --on-cyan: #031417;
+  --warn: #f2b84b;
+  --bad: #ff6b6b;
+  --wa: #25d366;
+  --font-display: "Chakra Petch", "Noto Sans Lao", system-ui, sans-serif;
+  --font-body: "Noto Sans Lao", "Phetsarath OT", system-ui, sans-serif;
+  --r: 14px;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+/* background: matte black with a fine brushed-diagonal weave, a soft neutral light from the top and darker edges */
+html { background-color: var(--bg);
+  background-image:
+    radial-gradient(80% 45% at 50% 0%, rgb(255 255 255 / .07), transparent 70%),
+    radial-gradient(140% 100% at 50% 40%, transparent 55%, rgb(0 0 0 / .6) 100%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / .025) 0 1px, transparent 1px 6px),
+    linear-gradient(180deg, #101215 0%, #08090b 45%, #050607 100%);
+  background-attachment: fixed }
+body { background: transparent }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation }
+body { color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+.wrap { max-width: 720px; margin: 0 auto; padding-block: 16px calc(150px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 22px }
+h1, h2, h3 { margin: 0; text-wrap: balance; line-height: 1.3 }
+h2 { font-size: 20px; font-weight: 700 }
+/* the logo's slanted cyan underline, reused as the section mark */
+h2::after { content: ""; display: block; width: 46px; height: 4px; margin-top: 6px; background: var(--cyan); border-radius: 1px; transform: skewX(-24deg); transform-origin: left }
+.qrbox h2::after { margin-inline: auto; transform-origin: center }
+.num { font-family: var(--font-display); font-variant-numeric: tabular-nums; font-weight: 600 }
+.muted { color: var(--muted) }
+button { font: inherit; color: inherit }
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px }
+
+/* header */
+.top { display: grid; justify-items: center; gap: 4px; text-align: center; padding-top: 4px }
+.top img { height: 92px; width: auto; display: block }
+.top p { margin: 0; color: var(--muted); font-size: 15px }
+.stamp { font-size: 13px; color: var(--muted) }
+
+/* search */
+/* brand filter: one horizontal row of chips under the search box */
+.wrap > *, .list > *, .search { min-width: 0 }
+.brands { display: flex; gap: 8px; overflow-x: auto; padding: 8px 2px 2px; margin-inline: -2px; scrollbar-width: none; -webkit-overflow-scrolling: touch }
+.brands::-webkit-scrollbar { display: none }
+.brands { -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent) }
+.chip { flex: none; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); border-radius: 999px; padding: 6px 14px; min-height: 36px;
+  font-family: var(--font-display); font-weight: 600; font-size: 14px; white-space: nowrap; cursor: pointer; display: inline-flex; align-items: center; gap: 6px }
+.chip small { color: var(--muted); font-weight: 500; font-size: 12px }
+.chip[aria-pressed="true"] { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
+.chip[aria-pressed="true"] small { color: var(--on-cyan); opacity: .7 }
+.search { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; background: rgb(10 12 14 / .6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(8px); padding-block: 6px; margin-block: -6px }
+input, textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; width: 100%; min-width: 0; min-height: 48px }
+textarea { min-height: 84px; resize: vertical }
+input::placeholder, textarea::placeholder { color: #6d757e }
+
+/* scent list: two-column tiles with a bottle photo; tapping the photo opens a window */
+.list { display: grid; gap: 10px }
+#list { grid-template-columns: repeat(2, minmax(0, 1fr)) }
+#list > .empty { grid-column: 1 / -1 }
+.scent { background: var(--surface); border: 1px solid var(--line); border-top-color: var(--edge); border-radius: var(--r); padding: 8px 8px 10px; display: grid; gap: 8px; min-width: 0; align-content: start; grid-template-rows: auto 1fr auto }
+.pic { position: relative; display: block; width: 100%; aspect-ratio: 1; max-width: 100%; border: 0; padding: 0; border-radius: 10px; overflow: hidden; background: var(--photo); cursor: zoom-in }
+.pic img { width: 100%; height: 100%; object-fit: contain; display: block }
+.pic.none { background: var(--surface-2); cursor: pointer; display: grid; place-items: center }
+.pic.none b { font-family: var(--font-display); font-weight: 700; font-size: 30px; letter-spacing: .04em; color: #3a4048 }
+.pic .low { position: absolute; left: 6px; top: 6px; background: var(--bg) }
+.scent .name { font-family: var(--font-display); font-weight: 600; font-size: 15px; overflow-wrap: anywhere; line-height: 1.3; padding-inline: 2px }
+.low { font-size: 12px; font-weight: 600; color: var(--warn); border: 1px solid var(--warn); border-radius: 999px; padding: 0 9px; white-space: nowrap }
+.sizes { display: grid; gap: 6px }
+.size { position: relative; border: 1px solid var(--line); background: var(--surface-2); border-radius: 10px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 44px; width: 100%; text-align: left }
+.size b { font-family: var(--font-display); font-size: 15px; font-weight: 700; white-space: nowrap }
+.size span { font-family: var(--font-display); font-size: 14px; color: var(--cyan); font-variant-numeric: tabular-nums; white-space: nowrap }
+.size:active { transform: scale(.97) }
+.size[data-n]:not([data-n="0"]) { border-color: var(--cyan); box-shadow: inset 0 0 0 1px var(--cyan) }
+.size[data-n]:not([data-n="0"])::after { content: attr(data-n); position: absolute; top: -8px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--cyan); color: var(--on-cyan); font-family: var(--font-display); font-weight: 700; font-size: 13px; display: grid; place-items: center }
+.size:disabled { opacity: .35; cursor: not-allowed }
+@media (max-width: 350px) { .size { flex-direction: column; align-items: flex-start; gap: 0 } }
+/* product window */
+.win { position: fixed; inset: 0; z-index: 20; background: rgb(0 0 0 / .72); display: grid; align-items: end; justify-items: center }
+.winbox { width: 100%; max-width: 520px; max-height: 92vh; overflow: auto; background: var(--surface); border: 1px solid var(--line); border-bottom: 0; border-radius: 20px 20px 0 0;
+  padding: 14px max(16px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); display: grid; gap: 12px; position: relative }
+.winbox .pic { cursor: default; border-radius: 14px; aspect-ratio: 1; width: min(100%, 32vh); height: auto; justify-self: center }
+.winbox .pic.none b { font-size: 56px }
+.winbox h3 { font-family: var(--font-display); font-size: 20px; overflow-wrap: anywhere; padding-right: 44px }
+.winbox .sizes .size { min-height: 52px; padding: 8px 14px }
+.winbox .size b { font-size: 17px } .winbox .size span { font-size: 16px }
+.winx { position: absolute; right: 12px; top: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font-size: 22px; line-height: 1; cursor: pointer; z-index: 1 }
+.scent .tl { font-size: 12.5px; color: var(--cyan); padding-inline: 2px; margin-top: -6px; line-height: 1.4 }
+.tags { display: flex; flex-wrap: wrap; gap: 6px }
+.tags span { font-size: 13px; border: 1px solid var(--edge); color: var(--cyan); border-radius: 999px; padding: 2px 10px }
+.notes { margin: 0; display: grid; gap: 6px; background: var(--surface-2); border-radius: 12px; padding: 10px 12px }
+.notes div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 8px; font-size: 14px }
+.notes dt { color: var(--muted) } .notes dd { margin: 0; overflow-wrap: anywhere }
+.use { margin: 0; font-size: 14px; color: var(--muted) } .use b { color: var(--fg); font-weight: 600 }
+.winbox { grid-auto-rows: max-content; background: #121417 }
+.winrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+.empty { padding: 26px 16px; text-align: center; color: var(--muted); background: var(--surface); border: 1px dashed var(--line); border-radius: var(--r) }
+
+/* checkout */
+.panel { background: var(--surface); border: 1px solid var(--line); border-top-color: var(--edge); border-radius: var(--r); padding: 16px; display: grid; gap: 14px; min-width: 0 }
+.cart { display: grid }
+.ci { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 11px 0; border-top: 1px solid var(--line) }
+.ci:first-child { border-top: 0; padding-top: 0 }
+.ci .n { font-weight: 600; overflow-wrap: anywhere; line-height: 1.35 }
+.ci .s { font-size: 14px; color: var(--muted) }
+.ci .p { text-align: right; font-family: var(--font-display); font-weight: 600; font-variant-numeric: tabular-nums }
+.qty { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; justify-self: start }
+.qty button { border: 0; background: var(--surface-2); width: 40px; height: 36px; cursor: pointer; font-size: 19px; line-height: 1 }
+.qty output { min-width: 32px; text-align: center; font-family: var(--font-display); font-weight: 700 }
+.tot { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--line); padding-top: 12px }
+.tot b { font-family: var(--font-display); font-size: 26px; color: var(--cyan); font-variant-numeric: tabular-nums }
+.field { display: grid; gap: 5px; font-size: 14px; color: var(--muted) }
+.field .req { color: var(--bad) }
+.err { color: var(--bad); font-size: 14px; margin: 0 }
+.err:empty { display: none }
+.qrbox { display: grid; justify-items: center; gap: 10px; text-align: center }
+.qrbox img { width: min(300px, 100%); aspect-ratio: 1; border-radius: 14px; background: #fff; display: block; max-width: 100% }
+.qrbox .amt { font-family: var(--font-display); font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums }
+.qrbox .acct { font-size: 14px; color: var(--muted) }
+.qrbox .save { width: min(300px, 100%) }
+.qrbox .hint { font-size: 14px; color: var(--muted); margin: 0 }
+.howpay { margin: 0; padding-left: 20px; font-size: 14px; color: var(--muted); display: grid; gap: 2px; text-align: left; justify-self: stretch }
+.code { font-family: var(--font-display); font-weight: 700; letter-spacing: .06em; color: var(--fg); background: var(--surface-2); border-radius: 8px; padding: 1px 8px }
+.btn { border-radius: 12px; padding: 12px 18px; min-height: 50px; cursor: pointer; border: 1px solid var(--line); background: var(--surface-2); font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; color: var(--fg); text-align: center }
+.btn.wa { background: var(--wa); border-color: var(--wa); color: #04210f; font-size: 17px }
+.nextrow { display: grid; gap: 8px }
+.nextrow .btn { width: 100%; justify-content: center }
+.btn.primary { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
+.btn[aria-disabled="true"] { opacity: .45; pointer-events: none }
+.acts { display: grid; gap: 8px }
+.note { font-size: 13px; color: var(--muted); margin: 0 }
+pre.otext { margin: 0; white-space: pre-wrap; word-break: break-word; font-family: var(--font-body); font-size: 14px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 12px; max-height: 260px; overflow: auto; user-select: all; -webkit-user-select: all }
+details > summary { cursor: pointer; color: var(--cyan); font-size: 14px }
+.contact { text-align: center; font-size: 14px; color: var(--muted); display: grid; gap: 2px }
+.contact b { color: var(--fg); user-select: all; -webkit-user-select: all }
+
+/* bottom step bar: cart total on top, the four order steps as tabs */
+.bar { position: fixed; z-index: 5; left: 0; right: 0; bottom: 0; background: rgb(18 20 23 / .97); border-top: 1px solid var(--edge); backdrop-filter: blur(10px); box-shadow: 0 -10px 30px rgb(0 0 0 / .45);
+  padding: 8px max(10px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)) }
+.bar .in { max-width: 720px; margin: 0 auto; display: grid; gap: 6px }
+.bar .sum .st { display: grid; line-height: 1.2; min-width: 0 }
+.bar .sum .pay { min-height: 46px; padding: 8px 22px; font-size: 17px; flex: none }
+.bar .sum { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-inline: 6px; line-height: 1.25; min-width: 0 }
+.bar .sum small { color: var(--muted); font-size: 13px }
+.bar .sum b { font-family: var(--font-display); font-size: 19px; font-variant-numeric: tabular-nums; color: var(--fg) }
+.tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px }
+.tab { appearance: none; background: none; border: 0; border-radius: 10px; padding: 5px 2px 4px; min-height: 52px; display: grid; justify-items: center; align-content: center; gap: 3px;
+  color: var(--muted); font-size: 12.5px; line-height: 1.2; text-align: center; cursor: pointer; min-width: 0 }
+.tab .dot { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line); font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--muted) }
+.tab.done .dot { border-color: var(--cyan); color: var(--cyan) }
+.tab.on { color: var(--cyan); background: rgb(25 227 236 / .08) }
+.tab.on .dot { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
+.tab span:last-child { overflow-wrap: anywhere }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(140px + env(safe-area-inset-bottom, 0px)); background: var(--cyan); color: var(--on-cyan); font-weight: 600; padding: 9px 16px; border-radius: 10px; font-size: 15px; max-width: calc(100vw - 32px); z-index: 9; text-align: center }
+@media (prefers-reduced-motion: reduce) { .size:active { transform: none } }
+</style>
+
+<div class="wrap">
+  <header class="top" data-view="shop">
+    <img src="__LOGO__" alt="Rush Up Perfume">
+    <p>ນ້ຳຫອມແທ້ ແບ່ງຂາຍ 2 · 5 · 10 ml</p>
+    <span class="stamp" id="stamp"></span>
+  </header>
+
+  <section class="list" id="shop" data-view="shop" aria-label="ກິ່ນທີ່ມີຂາຍ">
+    <div class="search"><input id="q" type="search" placeholder="ຄົ້ນຫາກິ່ນ ເຊັ່ນ Dior, YSL, Khamrah" autocomplete="off"><div class="brands" id="brands" role="group" aria-label="ເລືອກແບຣນ"></div></div>
+    <div class="list" id="list"></div>
+  </section>
+
+  <section class="panel" id="checkout" data-view="cart" aria-label="ກະຕ່າ ແລະ ຈ່າຍເງິນ">
+    <h2>ກະຕ່າຂອງທ່ານ</h2>
+    <div class="cart" id="cart"></div>
+    <div class="tot"><span>ລວມທັງໝົດ</span><b id="total">0 ກີບ</b></div>
+  </section>
+
+  <section class="panel" id="info" data-view="cart" aria-label="ຂໍ້ມູນຜູ້ສັ່ງ">
+    <h2>ຂໍ້ມູນຜູ້ສັ່ງ</h2>
+    <label class="field"><span>ຊື່ <span class="req" aria-hidden="true">*</span></span><input id="cName" autocomplete="name" placeholder="ຊື່ ແລະ ນາມສະກຸນ"></label>
+    <label class="field"><span>ເບີໂທ / WhatsApp <span class="req" aria-hidden="true">*</span></span><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="020 xxxx xxxx"></label>
+    <label class="field"><span>ທີ່ຢູ່ຈັດສົ່ງ / ໝາຍເຫດ</span><textarea id="cNote" placeholder="ບ້ານ, ເມືອງ, ແຂວງ · ສາຂາຂົນສົ່ງ (ອານຸສິດ, HAL, ...) · ຫຼື ມາຮັບເອງ"></textarea></label>
+  </section>
+
+  <div class="nextrow" data-view="cart">
+    <button type="button" class="btn primary" data-next="pay">ຕໍ່ໄປ: ສະແກນຈ່າຍ →</button>
+    <button type="button" class="btn" data-next="shop">+ ເລືອກກິ່ນເພີ່ມ</button>
+  </div>
+
+  <section class="panel qrbox" id="pay" data-view="pay" aria-label="ຈ່າຍເງິນ">
+    <h2>ສະແກນຈ່າຍດ້ວຍ BCEL One</h2>
+    <div id="qrWrap" class="qrbox"></div>
+    <ol class="howpay">
+      <li>ກົດ <b>ບັນທຶກຮູບ QR</b> (ຫຼື ແຄັບໜ້າຈໍ) ຫຼື ສະແກນຈາກອີກເຄື່ອງ</li>
+      <li>ເປີດ BCEL One → ສະແກນ QR → ເລືອກຮູບຈາກຄັງຮູບ</li>
+      <li>ຍອດເງິນຈະຂຶ້ນໃຫ້ອັດຕະໂນມັດ, ກວດຊື່ບັນຊີ <b>Vongsavanh Vannha</b> ແລ້ວກົດຢືນຢັນ</li>
+      <li>ແຄັບສະລິບໄວ້ ເພື່ອສົ່ງໃຫ້ຮ້ານ</li>
+    </ol>
+  </section>
+
+  <div class="nextrow" data-view="pay">
+    <button type="button" class="btn primary" data-next="send">ຈ່າຍແລ້ວ · ຕໍ່ໄປ: ສົ່ງສະລິບ →</button>
+    <button type="button" class="btn" data-next="cart">← ກັບໄປແກ້ກະຕ່າ / ຂໍ້ມູນ</button>
+  </div>
+
+  <section class="panel" id="send" data-view="send" aria-label="ສົ່ງອໍເດີ">
+    <h2>ສົ່ງອໍເດີໃຫ້ຮ້ານ</h2>
+    <p class="note">ກົດປຸ່ມລຸ່ມນີ້ ແລ້ວ WhatsApp ຈະເປີດພ້ອມຂໍ້ຄວາມອໍເດີ. ກົດສົ່ງ ແລ້ວແນບຮູບສະລິບໃນແຊັດດຽວກັນ. ຮ້ານຈະຢືນຢັນອໍເດີ ແລະ ແຈ້ງການຈັດສົ່ງ.</p>
+    <p class="err" id="err" role="alert"></p>
+    <div class="acts">
+      <a class="btn wa" id="waBtn" href="https://wa.me/8562055899555" target="_blank" rel="noopener">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3a.4.4 0 0 0 0-.4L9.5 7.6c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.7-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.2-.3-.3-.5-.4Z"/></svg>
+        ສົ່ງອໍເດີທາງ WhatsApp</a>
+      <button class="btn" id="copyBtn" type="button">ຄັດລອກຂໍ້ຄວາມອໍເດີ</button>
+    </div>
+    <details><summary>ເບິ່ງຂໍ້ຄວາມອໍເດີ</summary><pre class="otext" id="otext"></pre></details>
+    <p class="note">ຖ້າ WhatsApp ບໍ່ເປີດ: ກົດ "ຄັດລອກ" ແລ້ວສົ່ງຫາເບີ <b>020 55899555</b> ທາງ WhatsApp ຫຼື TikTok ຂອງຮ້ານ.</p>
+  </section>
+
+  <div class="nextrow" data-view="send">
+    <button type="button" class="btn" data-next="pay">← ກັບໄປໜ້າ QR</button>
+  </div>
+
+  <footer class="contact">
+    <span>WhatsApp <b>020 55899555</b></span>
+    <span>TikTok <b>Rush Up Perfume</b></span>
+    <span>ລາຄາ ແລະ ຈຳນວນອາດປ່ຽນແປງ · ຮ້ານຈະຢືນຢັນອໍເດີທຸກຄັ້ງ</span>
+  </footer>
+</div>
+
+<nav class="bar" id="bar" aria-label="ຂັ້ນຕອນການສັ່ງ">
+  <div class="in">
+    <div class="sum"><div class="st"><small id="barN">ຍັງບໍ່ໄດ້ເລືອກ</small><b id="barT">0 ກີບ</b></div><button type="button" class="btn primary pay" id="payBtn" data-next="cart" hidden>ຄິດເງິນ →</button></div>
+    <div class="tabs">
+      <button type="button" class="tab" data-go="shop"><span class="dot">1</span><span>ເລືອກກິ່ນ</span></button>
+      <button type="button" class="tab" data-go="cart"><span class="dot">2</span><span>ໃສ່ຂໍ້ມູນ</span></button>
+      <button type="button" class="tab" data-go="pay"><span class="dot">3</span><span>ສະແກນຈ່າຍ</span></button>
+      <button type="button" class="tab" data-go="send"><span class="dot">4</span><span>ສົ່ງສະລິບ</span></button>
+    </div>
+  </div>
+</nav>
+<div class="win" id="win" hidden role="dialog" aria-modal="true" aria-labelledby="winName">
+  <div class="winbox" id="winBox"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<img id="qrMark" src="__MARK__" alt="" hidden>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* Stock snapshot from the shop's stock app: scent name, ml left, sizes and prices only. */
+const STOCK = __STOCK__;
+const NOTES = __NOTES__;
+const PHOTOS = __PHOTOS__, PHOTO_SRC = __PHOTO_SRC__;
+const WA = "8562055899555";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const kip = n => Math.round(+n || 0).toLocaleString("en-US") + " ກີບ";
+const fmtMl = n => (+n).toLocaleString("en-US", { maximumFractionDigits: 1 });
+const ITEMS = STOCK.items.map((r, i) => ({ ...r, id: i }));
+
+/* ---------- state ---------- */
+let cart = {}; // "scentIndex|ml" -> qty
+const LS = "rushup-order-v1";
+try { const s = JSON.parse(localStorage.getItem(LS) || "{}");
+  if (s.at === STOCK.at && s.cart) cart = s.cart;  // a new stock snapshot clears an old cart
+  for (const k of ["cName", "cPhone", "cNote"]) if (s[k]) $("#" + k).value = s[k];
+} catch (e) {}
+function save() { try { localStorage.setItem(LS, JSON.stringify({ at: STOCK.at, cart, cName: $("#cName").value, cPhone: $("#cPhone").value, cNote: $("#cNote").value })); } catch (e) {} }
+
+const lines = () => Object.entries(cart).filter(([, q]) => q > 0).map(([k, qty]) => {
+  const [id, ml] = k.split("|").map(Number), it = ITEMS[id], s = it && it.sizes.find(z => z.ml === ml);
+  return s ? { k, it, ml, qty, price: s.price, sum: s.price * qty } : null;
+}).filter(Boolean);
+const mlInCart = id => lines().filter(l => l.it.id === id).reduce((a, l) => a + l.ml * l.qty, 0);
+const total = () => lines().reduce((a, l) => a + l.sum, 0);
+const count = () => lines().reduce((a, l) => a + l.qty, 0);
+
+/* order code: stable for one cart + customer, so the slip and the chat message match */
+function orderCode() {
+  const src = JSON.stringify([lines().map(l => [l.k, l.qty]), $("#cPhone").value.replace(/\D/g, ""), STOCK.at]);
+  let h = 2166136261; for (const ch of src) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return "RU-" + (h % 46656).toString(36).toUpperCase().padStart(3, "0") + (Math.floor(h / 46656) % 1296).toString(36).toUpperCase().padStart(2, "0");
+}
+
+/* ---------- payment QR: shop's static BCEL LaoQR + amount (same code as the stock app) ---------- */
+const QR_BASE = "00020101021115312031041800520446mch1995253CCEE038570016A00526628466257701082771041802030020314mch1995253CCEE5204597753034185802LA5917Vongsavanh Vannha6002VT6212020854774646630422AF";
+function crc16(str) {
+  let c = 0xFFFF;
+  for (const byte of new TextEncoder().encode(str)) { c ^= byte << 8; for (let k = 0; k < 8; k++) c = c & 0x8000 ? ((c << 1) ^ 0x1021) & 0xFFFF : (c << 1) & 0xFFFF; }
+  return c.toString(16).toUpperCase().padStart(4, "0");
+}
+// EMVCo / LaoQR: 01 = "12" one-time QR, 54 = amount in Kip, 63 = CRC of everything up to "6304"
+function qrPayload(amount) {
+  const f = [];
+  for (let i = 0; i + 4 <= QR_BASE.length;) { const t = QR_BASE.substr(i, 2), l = +QR_BASE.substr(i + 2, 2); f.push([t, QR_BASE.substr(i + 4, l)]); i += 4 + l; }
+  const out = f.filter(([t]) => t !== "54" && t !== "63").map(([t, v]) => (t === "01" ? ["01", "12"] : [t, v]));
+  out.push(["54", String(Math.round(amount))]);
+  out.sort((a, b) => +a[0] - +b[0]);
+  const body = out.map(([t, v]) => t + String(v.length).padStart(2, "0") + v).join("") + "6304";
+  return body + crc16(body);
+}
+/* Save the QR as a photo. Inside the claude.ai frame downloads are blocked, so there we only explain long-press. */
+const FRAMED = (() => { try { return window.self !== window.top; } catch (e) { return true; } })();
+let qrFile = null;
+function prepQrFile(src, amount) {
+  qrFile = null;
+  const im = new Image();
+  im.onload = () => {
+    const w = im.width, pad = Math.round(w * 0.06), h = w + Math.round(w * 0.26);
+    const c = document.createElement("canvas"); c.width = w; c.height = h; const g = c.getContext("2d");
+    g.fillStyle = "#ffffff"; g.fillRect(0, 0, w, h); g.drawImage(im, 0, 0, w, w);
+    g.fillStyle = "#000000"; g.textAlign = "center";
+    g.font = `700 ${Math.round(w * 0.075)}px system-ui, sans-serif`;
+    g.fillText(Math.round(amount).toLocaleString("en-US") + " LAK", w / 2, w + Math.round(w * 0.06));
+    g.fillStyle = "#555555"; g.font = `${Math.round(w * 0.042)}px system-ui, sans-serif`;
+    g.fillText("Vongsavanh Vannha · BCEL One", w / 2, w + Math.round(w * 0.06) + pad + Math.round(w * 0.02));
+    c.toBlob(b => { if (b && lastQR === amount) qrFile = new File([b], `RushUp-QR-${Math.round(amount)}.png`, { type: "image/png" }); }, "image/png");
+  };
+  im.src = src;
+}
+async function saveQr() {
+  if (!qrFile) return toast("ກຳລັງກຽມຮູບ · ລອງໃໝ່ອີກຄັ້ງ");
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [qrFile] })) { await navigator.share({ files: [qrFile] }); return; }
+  } catch (e) { if (e && e.name === "AbortError") return; }
+  const a = document.createElement("a"), u = URL.createObjectURL(qrFile);
+  a.href = u; a.download = qrFile.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 4000);
+  toast("ບັນທຶກຮູບ QR ແລ້ວ · ເປີດ BCEL One ແລ້ວເລືອກຮູບຈາກຄັງຮູບ");
+}
+document.addEventListener("click", e => { if (e.target.closest("#saveQr")) saveQr(); });
+function qrImage(amount) {
+  if (!window.qrcode) return null;
+  const q = qrcode(0, "H"); q.addData(qrPayload(amount)); q.make();
+  const n = q.getModuleCount(), quiet = 3, cell = Math.max(4, Math.floor(720 / (n + 2 * quiet))), size = cell * (n + 2 * quiet);
+  const c = document.createElement("canvas"); c.width = c.height = size; const g = c.getContext("2d");
+  g.fillStyle = "#ffffff"; g.fillRect(0, 0, size, size); g.fillStyle = "#000000";
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) g.fillRect((k + quiet) * cell, (r + quiet) * cell, cell, cell);
+  const mk = $("#qrMark");
+  if (mk.complete && mk.naturalWidth) { const ms = Math.round(n * cell * 0.2), o = (size - ms) / 2; g.fillStyle = "#ffffff"; g.fillRect(o - cell, o - cell, ms + 2 * cell, ms + 2 * cell); g.drawImage(mk, o, o, ms, ms); }
+  return c.toDataURL("image/png");
+}
+
+/* ---------- render ---------- */
+const photoOf = name => PHOTO_SRC[PHOTOS[name.toLowerCase().replace(/\s+/g, " ").trim()]] || "";
+const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+function sizeBtns(r) {
+  const used = mlInCart(r.id);
+  return r.sizes.map(s => { const n = cart[r.id + "|" + s.ml] || 0;
+    return `<button type="button" class="size" data-k="${r.id}|${s.ml}" data-n="${n}" ${used + s.ml > r.left ? "disabled" : ""} aria-label="${esc(r.name)} ${s.ml} ml ${kip(s.price)} ເພີ່ມໃສ່ກະຕ່າ"><b>${fmtMl(s.ml)} ml</b><span>${kip(s.price)}</span></button>`; }).join("");
+}
+function picHtml(r, tag) {
+  const src = photoOf(r.name), low = r.left < 15 ? `<span class="low">ເຫຼືອໜ້ອຍ</span>` : "";
+  const inner = src ? `<img src="${src}" alt="${esc(r.name)}" loading="lazy">` : `<b aria-hidden="true">${esc(initials(r.name))}</b>`;
+  return tag === "button" ? `<button type="button" class="pic${src ? "" : " none"}" data-open="${r.id}" aria-label="ເບິ່ງ ${esc(r.name)}">${inner}${low}</button>`
+    : `<div class="pic${src ? "" : " none"}">${inner}${low}</div>`;
+}
+const L_G = { M: "ຜູ້ຊາຍ", F: "ຜູ້ຍິງ", U: "Unisex" };
+const L_S = { fresh: "ສົດຊື່ນ", fruity: "ໝາກໄມ້", woody: "ກິ່ນໄມ້", sweet: "ຫວານ", spicy: "ເຄື່ອງເທດ", floral: "ດອກໄມ້" };
+const L_U = { day: "ກາງເວັນ", night: "ກາງຄືນ", work: "ໄປເຮັດວຽກ", event: "ອອກງານ", hot: "ອາກາດຮ້ອນ", cool: "ອາກາດເຢັນ" };
+const noteOf = name => NOTES[name.toLowerCase().replace(/\s+/g, " ").trim()];
+const tagLine = r => { const n = noteOf(r.name); return n ? [L_G[n.g], ...n.s.map(x => L_S[x])].filter(Boolean).join(" · ") : ""; };
+function notesHtml(r) {
+  const n = noteOf(r.name); if (!n) return "";
+  const row = (k, v) => v ? `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>` : "";
+  return `<div class="tags">${[L_G[n.g], ...n.s.map(x => L_S[x])].filter(Boolean).map(x => `<span>${x}</span>`).join("")}</div>
+    <dl class="notes">${row("ກິ່ນເລີ່ມຕົ້ນ", n.t)}${row("ກິ່ນກາງ", n.h)}${row("ກິ່ນທ້າຍ", n.b)}</dl>
+    ${n.u && n.u.length ? `<p class="use"><b>ເໝາະກັບ:</b> ${n.u.map(x => L_U[x]).filter(Boolean).join(" · ")}</p>` : ""}`;
+}
+function renderList() {
+  const q = $("#q").value.trim().toLowerCase();
+  const rows = ITEMS.filter(r => (!q || r.name.toLowerCase().includes(q) || String(r.brand).toLowerCase().includes(q)) && (!brand || r.brand === brand));
+  $("#list").innerHTML = rows.length ? rows.map(r => `<article class="scent">${picHtml(r, "button")}<span class="name">${esc(r.name)}</span>${tagLine(r) ? `<span class="tl">${tagLine(r)}</span>` : ""}<div class="sizes">${sizeBtns(r)}</div></article>`).join("")
+    : `<div class="empty">ບໍ່ພົບກິ່ນ "${esc(q)}" · ສອບຖາມຮ້ານທາງ WhatsApp ໄດ້</div>`;
+  renderWin();
+}
+let winId = -1;
+function renderWin() {
+  const w = $("#win"); if (winId < 0) { w.hidden = true; return; }
+  const r = ITEMS[winId], n = r.sizes.reduce((a, s) => a + (cart[r.id + "|" + s.ml] || 0), 0);
+  $("#winBox").innerHTML = `<button type="button" class="winx" data-close aria-label="ປິດ">×</button>${picHtml(r, "div")}
+    <h3 id="winName">${esc(r.name)}</h3>${notesHtml(r)}<div class="sizes">${sizeBtns(r)}</div>
+    <div class="winrow"><button type="button" class="btn" data-close>ເລືອກກິ່ນອື່ນ</button><button type="button" class="btn primary" data-close data-next="cart" ${lines().length ? "" : "disabled"}>ຄິດເງິນ →</button></div>`;
+  w.hidden = false;
+}
+function openWin(id) { winId = id; renderWin(); }
+function closeWin() { winId = -1; renderWin(); }
+let lastQR = -1;
+function renderCart() {
+  const L = lines(), t = total(), n = count();
+  $("#cart").innerHTML = L.length ? L.map(l => `<div class="ci"><div><div class="n">${esc(l.it.name)}</div><div class="s">${fmtMl(l.ml)} ml · ${kip(l.price)}</div></div>
+      <div class="p">${kip(l.sum)}</div>
+      <div class="qty"><button type="button" data-dec="${l.k}" aria-label="ຫຼຸດ">−</button><output>${l.qty}</output><button type="button" data-inc="${l.k}" aria-label="ເພີ່ມ" ${mlInCart(l.it.id) + l.ml > l.it.left ? "disabled" : ""}>+</button></div></div>`).join("")
+    : `<div class="empty">ຍັງບໍ່ມີສິນຄ້າ · ກົດເລືອກຂະໜາດຈາກລາຍການດ້ານເທິງ</div>`;
+  $("#total").textContent = kip(t);
+  $("#barN").textContent = n ? `${n} ຊິ້ນ ໃນກະຕ່າ` : "ຍັງບໍ່ໄດ້ເລືອກ";
+  $("#barT").textContent = kip(t);
+  if (t !== lastQR) {
+    lastQR = t;
+    if (t > 0) {
+      const src = qrImage(t);
+      $("#qrWrap").innerHTML = src ? `<img src="${src}" alt="LaoQR ຈ່າຍ ${kip(t)}"><span class="amt">${kip(t)}</span><span class="acct">Vongsavanh Vannha · BCEL One</span>${FRAMED
+        ? `<p class="hint">ກົດຄ້າງທີ່ຮູບ QR ແລ້ວເລືອກ ບັນທຶກຮູບ (Save Image)</p>`
+        : `<button type="button" class="btn primary save" id="saveQr">⬇ ບັນທຶກຮູບ QR</button>`}`
+        : `<p class="err">ໂຫຼດ QR ບໍ່ສຳເລັດ · ກະລຸນາລອງໃໝ່ ຫຼື ຂໍ QR ຈາກຮ້ານທາງ WhatsApp</p>`;
+      prepQrFile(src, t);
+    } else $("#qrWrap").innerHTML = `<div class="empty" style="justify-self:stretch">QR ພ້ອມຍອດເງິນຈະຂຶ້ນ ເມື່ອເລືອກສິນຄ້າແລ້ວ</div>`;
+  }
+  renderOrder();
+  if (typeof markTabs === "function") markTabs();
+}
+function orderText() {
+  const L = lines(), code = orderCode();
+  const out = [`ສະບາຍດີ Rush up ລະຫັດອໍເດີ: ${code}`, ""];
+  L.forEach((l, i) => out.push(`${i + 1}. ${l.it.name} ${fmtMl(l.ml)}ml × ${l.qty} = ${kip(l.sum)}`));
+  out.push("", `ລວມທັງໝົດ: ${kip(total())}`, "",
+    `ຊື່: ${$("#cName").value.trim() || "-"}`, `ເບີໂທ: ${$("#cPhone").value.trim() || "-"}`);
+  const note = $("#cNote").value.trim(); if (note) out.push(`ທີ່ຢູ່: ${note}`);
+  return out.join("\n");
+}
+function problem() {
+  if (!lines().length) return "ກະລຸນາເລືອກສິນຄ້າຢ່າງໜ້ອຍ 1 ລາຍການ";
+  if (!$("#cName").value.trim()) return "ກະລຸນາໃສ່ຊື່";
+  if ($("#cPhone").value.replace(/\D/g, "").length < 8) return "ກະລຸນາໃສ່ເບີໂທ ຫຼື WhatsApp ໃຫ້ຖືກຕ້ອງ";
+  return "";
+}
+function renderOrder() {
+  const txt = orderText(), bad = problem();
+  $("#otext").textContent = txt;
+  $("#waBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent(txt)}`;
+  $("#waBtn").setAttribute("aria-disabled", bad ? "true" : "false");
+  $("#copyBtn").disabled = !!bad;
+  $("#err").textContent = bad && (lines().length || shownErr) ? bad : "";
+}
+let shownErr = false;
+function toast(m) { const t = $("#toast"); t.textContent = m; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 2200); }
+function render() { renderList(); renderCart(); save(); }
+
+/* ---------- events ---------- */
+$("#list").addEventListener("click", e => { const o = e.target.closest("[data-open]"); if (o) openWin(+o.dataset.open); });
+$("#win").addEventListener("click", e => { if (e.target.id === "win" || e.target.closest("[data-close]")) closeWin(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && winId >= 0) closeWin(); });
+document.addEventListener("click", e => {
+  const b = e.target.closest(".size"); if (!b || b.disabled) return;
+  const [id, ml] = b.dataset.k.split("|").map(Number), it = ITEMS[id];
+  if (mlInCart(id) + ml > it.left) return toast("ສິນຄ້າເຫຼືອບໍ່ພໍ");
+  cart[b.dataset.k] = (cart[b.dataset.k] || 0) + 1; render();
+  toast(`✓ ເພີ່ມ ${fmtMl(ml)} ml ໃສ່ກະຕ່າແລ້ວ`);
+});
+$("#cart").addEventListener("click", e => {
+  const inc = e.target.closest("[data-inc]"), dec = e.target.closest("[data-dec]");
+  if (inc) { const [id, ml] = inc.dataset.inc.split("|").map(Number); if (mlInCart(id) + ml > ITEMS[id].left) return toast("ສິນຄ້າເຫຼືອບໍ່ພໍ"); cart[inc.dataset.inc]++; }
+  if (dec) { cart[dec.dataset.dec]--; if (cart[dec.dataset.dec] <= 0) delete cart[dec.dataset.dec]; }
+  if (inc || dec) render();
+});
+$("#q").addEventListener("input", renderList);
+let brand = "";
+function renderBrands() {
+  const counts = {}; ITEMS.forEach(r => (counts[r.brand] = (counts[r.brand] || 0) + 1));
+  const names = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+  $("#brands").innerHTML = [["", "ທັງໝົດ", ITEMS.length], ...names.map(n => [n, n, counts[n]])]
+    .map(([v, label, c]) => `<button type="button" class="chip" data-brand="${esc(v)}" aria-pressed="${v === brand}">${esc(label)}<small>${c}</small></button>`).join("");
+}
+$("#brands").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if (!c) return;
+  brand = c.dataset.brand === brand ? "" : c.dataset.brand;
+  renderBrands(); renderList();
+  const top = $("#shop").getBoundingClientRect().top + scrollY - 4; if (scrollY > top) scrollTo({ top, behavior: "smooth" });
+});
+renderBrands();
+/* each step is its own screen; the bottom tabs switch between them */
+const TABS = [...document.querySelectorAll(".tab")], VIEWS = ["shop", "cart", "pay", "send"];
+let view = "shop";
+function go(v) {
+  if (v === "pay" && !lines().length) { toast("ກະລຸນາເລືອກສິນຄ້າກ່ອນ"); v = "shop"; }
+  if (v === "pay" && problem()) { shownErr = true; renderOrder(); toast(problem()); v = "cart"; }
+  view = v;
+  document.querySelectorAll("[data-view]").forEach(el => (el.hidden = el.dataset.view !== v));
+  markTabs(); scrollTo(0, 0);
+}
+document.querySelector(".tabs").addEventListener("click", e => { const t = e.target.closest(".tab"); if (t) go(t.dataset.go); });
+document.addEventListener("click", e => { const b = e.target.closest("[data-next]"); if (b) go(b.dataset.next); });
+function markTabs() {
+  $("#payBtn").hidden = !(view === "shop" && lines().length);
+  const has = lines().length > 0, info = has && !problem();
+  const done = [has, info, false, false], cur = VIEWS.indexOf(view);
+  TABS.forEach((t, i) => { t.classList.toggle("on", i === cur); t.classList.toggle("done", done[i] && i !== cur);
+    t.querySelector(".dot").textContent = done[i] && i !== cur ? "✓" : i + 1;
+    if (i === cur) t.setAttribute("aria-current", "step"); else t.removeAttribute("aria-current"); });
+}
+for (const k of ["cName", "cPhone", "cNote"]) $("#" + k).addEventListener("input", () => { renderOrder(); markTabs(); save(); });
+$("#waBtn").addEventListener("click", e => { const bad = problem(); if (bad) { e.preventDefault(); shownErr = true; renderOrder(); go(bad.includes("ສິນຄ້າ") ? "shop" : "cart"); } });
+$("#copyBtn").addEventListener("click", () => {
+  const txt = orderText(), ok = () => toast("ຄັດລອກແລ້ວ · ວາງໃນ WhatsApp ໄດ້ເລີຍ");
+  const fail = () => { $("#otext").closest("details").open = true; const r = document.createRange(); r.selectNodeContents($("#otext")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("ກົດຄ້າງທີ່ຂໍ້ຄວາມ ແລ້ວເລືອກ ຄັດລອກ"); };
+  try { navigator.clipboard.writeText(txt).then(ok, fail); } catch (e) { fail(); }
+});
+$("#qrMark").addEventListener("load", () => { lastQR = -1; renderCart(); });
+
+const d = new Date(STOCK.at);
+$("#stamp").textContent = `ອັບເດດສະຕັອກ ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()} · ${ITEMS.length} ກິ່ນ`;
+render();
+go("shop");
+</script>

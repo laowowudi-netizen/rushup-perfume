@@ -1,0 +1,430 @@
+{
+ "acqua di parma fico di amalfi": {
+  "g": "U",
+  "s": [
+   "fresh",
+   "fruity"
+  ],
+  "t": "Fig, Bergamot, Lemon, Grapefruit",
+  "h": "Fig nectar, Pink pepper, Jasmine",
+  "b": "Fig wood, Cedar, Benzoin",
+  "u": [
+   "day",
+   "hot"
+  ]
+ },
+ "amaf club de nuit blue icon": {
+  "g": "M",
+  "s": [
+   "fresh",
+   "woody"
+  ],
+  "t": "Grapefruit, Lemon, Mint, Bergamot",
+  "h": "Ginger, Pink pepper, Jasmine",
+  "b": "Incense, Cedar, Sandalwood",
+  "u": [
+   "day",
+   "work"
+  ],
+  "q": 1
+ },
+ "amaf club de nuit intense man edp": {
+  "g": "M",
+  "s": [
+   "fruity",
+   "woody"
+  ],
+  "t": "Pineapple, Lemon, Blackcurrant, Apple",
+  "h": "Birch, Jasmine, Rose",
+  "b": "Musk, Ambergris, Patchouli, Vanilla",
+  "u": [
+   "night",
+   "event"
+  ]
+ },
+ "armani stronger with you intensely": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Pink pepper, Juniper, Mandarin",
+  "h": "Toffee, Cinnamon, Lavender, Sage",
+  "b": "Vanilla, Tonka, Amber, Suede",
+  "u": [
+   "night",
+   "cool"
+  ]
+ },
+ "bdk rouge smoking": {
+  "g": "U",
+  "s": [
+   "sweet",
+   "fruity"
+  ],
+  "t": "Cherry, Pink pepper, Bergamot",
+  "h": "Almond, Heliotrope",
+  "b": "Vanilla, Tonka, Sandalwood",
+  "u": [
+   "night",
+   "event"
+  ],
+  "q": 1
+ },
+ "ck one": {
+  "g": "U",
+  "s": [
+   "fresh"
+  ],
+  "t": "Lemon, Bergamot, Pineapple, Cardamom",
+  "h": "Jasmine, Violet, Lily of the valley",
+  "b": "Musk, Cedar, Green tea, Amber",
+  "u": [
+   "day",
+   "hot",
+   "work"
+  ]
+ },
+ "dior sauvage edp": {
+  "g": "M",
+  "s": [
+   "fresh",
+   "spicy"
+  ],
+  "t": "Bergamot",
+  "h": "Sichuan pepper, Lavender, Star anise, Nutmeg",
+  "b": "Ambroxan, Vanilla",
+  "u": [
+   "day",
+   "night",
+   "work"
+  ]
+ },
+ "ex nihilo blue talisman edp": {
+  "g": "U",
+  "s": [
+   "fresh",
+   "fruity"
+  ],
+  "t": "Pear, Bergamot, Mandarin",
+  "h": "Orange blossom, Ginger",
+  "b": "Musk, Ambrox, Woods",
+  "u": [
+   "day",
+   "hot"
+  ],
+  "q": 1
+ },
+ "gris dior": {
+  "g": "U",
+  "s": [
+   "floral",
+   "woody"
+  ],
+  "t": "Bergamot",
+  "h": "Rose, Jasmine",
+  "b": "Patchouli, Oakmoss",
+  "u": [
+   "work",
+   "event"
+  ]
+ },
+ "jpg elixir absolu": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Lavender",
+  "h": "Honey, Tonka",
+  "b": "Sandalwood, Vanilla",
+  "u": [
+   "night",
+   "cool"
+  ],
+  "q": 1
+ },
+ "jpg le beau le parfum": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "woody"
+  ],
+  "t": "Pineapple, Cypress, Ginger",
+  "h": "Iris, Coconut",
+  "b": "Tonka, Sandalwood, Ambergris",
+  "u": [
+   "night",
+   "hot"
+  ]
+ },
+ "jpg le male elixir": {
+  "g": "M",
+  "s": [
+   "sweet"
+  ],
+  "t": "Lavender, Mint",
+  "h": "Vanilla, Benzoin",
+  "b": "Honey, Tonka, Tobacco",
+  "u": [
+   "night",
+   "cool",
+   "event"
+  ]
+ },
+ "jpg le male le pafum": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Cardamom",
+  "h": "Lavender, Iris",
+  "b": "Vanilla, Woods",
+  "u": [
+   "night",
+   "work"
+  ]
+ },
+ "kilian roses on ice": {
+  "g": "U",
+  "s": [
+   "fresh",
+   "floral"
+  ],
+  "t": "Juniper, Cucumber, Lime",
+  "h": "Rose",
+  "b": "Sandalwood, Musk",
+  "u": [
+   "day",
+   "hot",
+   "event"
+  ],
+  "q": 1
+ },
+ "lattafa khamrah": {
+  "g": "U",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Cinnamon, Nutmeg, Bergamot",
+  "h": "Dates, Praline, Tuberose",
+  "b": "Vanilla, Tonka, Benzoin, Myrrh",
+  "u": [
+   "night",
+   "cool"
+  ]
+ },
+ "le labo santal 33": {
+  "g": "U",
+  "s": [
+   "woody"
+  ],
+  "t": "Cardamom, Violet",
+  "h": "Iris, Papyrus",
+  "b": "Sandalwood, Cedar, Leather, Ambrox",
+  "u": [
+   "day",
+   "work"
+  ]
+ },
+ "le sel d’issey issey miyake edt": {
+  "g": "M",
+  "s": [
+   "fresh",
+   "woody"
+  ],
+  "t": "Sea salt, Grapefruit",
+  "h": "Mineral notes",
+  "b": "Vetiver, Woods",
+  "u": [
+   "day",
+   "hot"
+  ],
+  "q": 1
+ },
+ "lv l'immensite": {
+  "g": "M",
+  "s": [
+   "fresh"
+  ],
+  "t": "Grapefruit, Ginger, Bergamot",
+  "h": "Water notes, Sage, Geranium",
+  "b": "Ambroxan, Labdanum",
+  "u": [
+   "day",
+   "hot",
+   "work"
+  ]
+ },
+ "mfk baccarat rouge 540 extrait de parfum": {
+  "g": "U",
+  "s": [
+   "sweet",
+   "woody"
+  ],
+  "t": "Bitter almond, Saffron",
+  "h": "Jasmine, Cedar",
+  "b": "Ambergris, Woods, Musk",
+  "u": [
+   "night",
+   "event"
+  ]
+ },
+ "montblanc explorer": {
+  "g": "M",
+  "s": [
+   "woody",
+   "fresh"
+  ],
+  "t": "Bergamot, Pink pepper, Clary sage",
+  "h": "Vetiver, Leather",
+  "b": "Patchouli, Ambroxan, Akigalawood",
+  "u": [
+   "day",
+   "work"
+  ]
+ },
+ "pdm layton": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Apple, Lavender, Bergamot, Mandarin",
+  "h": "Geranium, Violet, Jasmine",
+  "b": "Vanilla, Cardamom, Sandalwood, Patchouli",
+  "u": [
+   "night",
+   "cool",
+   "event"
+  ]
+ },
+ "si passione intense": {
+  "g": "F",
+  "s": [
+   "fruity",
+   "sweet"
+  ],
+  "t": "Pear, Blackcurrant, Pink pepper",
+  "h": "Rose",
+  "b": "Vanilla, Woods",
+  "u": [
+   "night",
+   "event"
+  ],
+  "q": 1
+ },
+ "versace eros frame": {
+  "g": "M",
+  "s": [
+   "spicy",
+   "woody"
+  ],
+  "t": "Chinotto, Black pepper, Mandarin, Rosemary",
+  "h": "Pepperwood, Geranium, Rose",
+  "b": "Tonka, Vanilla, Sandalwood, Patchouli",
+  "u": [
+   "night",
+   "cool"
+  ]
+ },
+ "versace pour homme": {
+  "g": "M",
+  "s": [
+   "fresh"
+  ],
+  "t": "Lemon, Neroli, Bergamot",
+  "h": "Hyacinth, Clary sage, Cedar, Geranium",
+  "b": "Tonka, Musk, Amber",
+  "u": [
+   "day",
+   "hot",
+   "work"
+  ]
+ },
+ "ysl myslf edp": {
+  "g": "M",
+  "s": [
+   "woody",
+   "floral"
+  ],
+  "t": "Bergamot",
+  "h": "Orange blossom",
+  "b": "Woods, Patchouli",
+  "u": [
+   "day",
+   "work"
+  ]
+ },
+ "ysl tuxedo": {
+  "g": "U",
+  "s": [
+   "spicy",
+   "sweet"
+  ],
+  "t": "Violet leaf, Coriander, Pepper",
+  "h": "Rose, Lily of the valley, Patchouli",
+  "b": "Vanilla, Ambergris, Benzoin",
+  "u": [
+   "night",
+   "event"
+  ]
+ },
+ "ysl y edp": {
+  "g": "M",
+  "s": [
+   "fresh",
+   "woody"
+  ],
+  "t": "Apple, Ginger, Bergamot",
+  "h": "Sage, Juniper, Geranium",
+  "b": "Amberwood, Tonka, Cedar, Vetiver",
+  "u": [
+   "day",
+   "work"
+  ]
+ },
+ "jpg le beau narcisse": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "woody"
+  ],
+  "t": "Bergamot",
+  "h": "Powdery musk",
+  "b": "Tonka bean",
+  "u": [
+   "night",
+   "work"
+  ]
+ },
+ "mancera wave musk": {
+  "g": "U",
+  "s": [
+   "fresh"
+  ],
+  "t": "Grapefruit, Blackcurrant, Grass",
+  "h": "Sea notes, Driftwood, Orange blossom, Salt",
+  "b": "White musk, Seaweed",
+  "u": [
+   "day",
+   "hot"
+  ]
+ },
+ "marwa arabiyat": {
+  "g": "U",
+  "s": [
+   "fresh",
+   "woody"
+  ],
+  "t": "Bergamot, Petitgrain, Ginger",
+  "h": "Black tea, Geranium, Frankincense",
+  "b": "Ambroxan, Musk, Guaiac wood",
+  "u": [
+   "day",
+   "work"
+  ]
+ }
+}
