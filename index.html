@@ -43,12 +43,14 @@
   --r: 14px;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent }
+/* background: matte black with a fine brushed-diagonal weave, a soft neutral light from the top and darker edges */
 html { background-color: var(--bg);
   background-image:
-    radial-gradient(120% 60% at 50% -10%, rgb(25 227 236 / .16), transparent 60%),
-    radial-gradient(90% 50% at 100% 110%, rgb(25 227 236 / .08), transparent 60%),
-    url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22220%22%20height%3D%22220%22%20viewBox%3D%220%200%20220%20220%22%3E%3Cg%20fill%3D%22%2319e3ec%22%3E%3Cpath%20d%3D%22M30%2040h46l-6%207H24z%22%20opacity%3D%22.10%22/%3E%3Cpath%20d%3D%22M128%20118h70l-6%207h-70z%22%20opacity%3D%22.07%22/%3E%3Cpath%20d%3D%22M60%20178h30l-5%206H55z%22%20opacity%3D%22.09%22/%3E%3Cpath%20d%3D%22M170%2030h22l-4%205h-22z%22%20opacity%3D%22.08%22/%3E%3C/g%3E%3Cg%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221%22%20opacity%3D%22.035%22%3E%3Cpath%20d%3D%22M-20%20120L120%20-20M80%20240L240%2080M140%20240L240%20140%22/%3E%3C/g%3E%3C/svg%3E");
-  background-size: 100% 100%, 100% 100%, 220px 220px; background-attachment: fixed }
+    radial-gradient(80% 45% at 50% 0%, rgb(255 255 255 / .07), transparent 70%),
+    radial-gradient(140% 100% at 50% 40%, transparent 55%, rgb(0 0 0 / .6) 100%),
+    repeating-linear-gradient(135deg, rgb(255 255 255 / .025) 0 1px, transparent 1px 6px),
+    linear-gradient(180deg, #101215 0%, #08090b 45%, #050607 100%);
+  background-attachment: fixed }
 body { background: transparent }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; touch-action: manipulation }
 body { color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6 }
@@ -68,7 +70,7 @@ button { font: inherit; color: inherit }
 
 /* header */
 .top { display: grid; justify-items: center; gap: 4px; text-align: center; padding-top: 4px }
-.top img { height: 92px; width: auto; display: block; filter: drop-shadow(0 0 18px rgb(25 227 236 / .28)) }
+.top img { height: 92px; width: auto; display: block }
 .top p { margin: 0; color: var(--muted); font-size: 15px }
 .stamp { font-size: 13px; color: var(--muted) }
 
@@ -83,7 +85,7 @@ button { font: inherit; color: inherit }
 .chip small { color: var(--muted); font-weight: 500; font-size: 12px }
 .chip[aria-pressed="true"] { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
 .chip[aria-pressed="true"] small { color: var(--on-cyan); opacity: .7 }
-.search { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; background: rgb(7 8 10 / .82); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding-block: 6px; margin-block: -6px }
+.search { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; background: rgb(10 12 14 / .6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(8px); padding-block: 6px; margin-block: -6px }
 input, textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 11px 13px; width: 100%; min-width: 0; min-height: 48px }
 textarea { min-height: 84px; resize: vertical }
 input::placeholder, textarea::placeholder { color: #6d757e }
