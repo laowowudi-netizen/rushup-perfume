@@ -874,12 +874,11 @@ function renderCart() {
 }
 function orderText() {
   const L = lines(), code = orderCode();
-  const out = [`🩵🖤ສະບາຍດີ Rush Up Perfume 🖤🩵`, `- ອໍເດີ້ນ້ຳຫອມແນ່ເຈົ້າ`, `ລະຫັດອໍເດີ: ${code}`, ""];
+  const out = [`ສະບາຍດີ Rush up ລະຫັດອໍເດີ: ${code}`, ""];
   L.forEach((l, i) => out.push(`${i + 1}. ${l.it.name} ${fmtMl(l.ml)}ml × ${l.qty} = ${kip(l.sum)}`));
   out.push("", `ລວມທັງໝົດ: ${kip(total())}`, "",
     `ຊື່: ${$("#cName").value.trim() || "-"}`, `ເບີໂທ: ${$("#cPhone").value.trim() || "-"}`);
-  const note = $("#cNote").value.trim(); if (note) out.push(`ທີ່ຢູ່/ໝາຍເຫດ: ${note}`);
-  out.push("", "ຈ່າຍຜ່ານ BCEL One QR ແລ້ວ 🖤🩵");
+  const note = $("#cNote").value.trim(); if (note) out.push(`ທີ່ຢູ່: ${note}`);
   return out.join("\n");
 }
 function problem() {
