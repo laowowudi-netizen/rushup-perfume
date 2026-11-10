@@ -18,6 +18,7 @@ const head = `<!doctype html><html lang="lo"><head><meta charset="utf-8">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="/icon.png">
 <link rel="apple-touch-icon" href="/icon.png">
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "39a723205f7a4a7bb867184a7ea4d022"}'></script><!-- End Cloudflare Web Analytics -->
 <style>:root{box-sizing:border-box}body{margin:0;background:#07080a}img{max-width:100%}[hidden]{display:none!important}</style>
 </head><body>`;
 fs.mkdirSync("site", { recursive: true });
