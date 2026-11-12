@@ -5,9 +5,9 @@ const head = `<!doctype html><html lang="lo"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="ສັ່ງນ້ຳຫອມແທ້ແບ່ງຂາຍ Rush Up Perfume · ຈ່າຍຜ່ານ BCEL One QR">
 <meta property="og:title" content="Rush Up Perfume · ສັ່ງນ້ຳຫອມ">
-<meta property="og:description" content="ນ້ຳຫອມແທ້ ແບ່ງຂາຍ 5 · 10 ml · ເລືອກກິ່ນ ສະແກນຈ່າຍ ສົ່ງສະລິບທາງ WhatsApp">
+<meta property="og:description" content="ນ້ຳຫອມແທ້ ແບ່ງຂາຍ 2 · 5 · 10 · 20 ml · ເລືອກກິ່ນ ສະແກນຈ່າຍ ສົ່ງສະລິບທາງ WhatsApp">
 <meta name="theme-color" content="#07080a">
-<title>Rush Up Perfume · ນ້ຳຫອມແທ້ແບ່ງຂາຍ 2 · 5 · 10 ml</title>
+<title>Rush Up Perfume · ນ້ຳຫອມແທ້ແບ່ງຂາຍ 2 · 5 · 10 · 20 ml</title>
 <link rel="canonical" href="https://www.rushupperfume.com/">
 <meta property="og:url" content="https://www.rushupperfume.com/">
 <meta property="og:type" content="website">
