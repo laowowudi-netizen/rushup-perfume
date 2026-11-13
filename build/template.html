@@ -169,6 +169,14 @@ details > summary { cursor: pointer; color: var(--cyan); font-size: 14px }
 .tab.on { color: var(--cyan); background: rgb(25 227 236 / .08) }
 .tab.on .dot { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
 .tab span:last-child { overflow-wrap: anywhere }
+.sent { position: fixed; inset: 0; z-index: 30; background: rgb(0 0 0 / .78); display: grid; place-items: center; padding: 16px max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px)) }
+.sentbox { width: 100%; max-width: 400px; background: #121417; border: 1px solid var(--line); border-top: 3px solid var(--cyan); border-radius: 18px; padding: 26px 20px 20px; display: grid; gap: 12px; text-align: center }
+.sentbox .ok { width: 64px; height: 64px; margin: 0 auto; border-radius: 50%; background: var(--cyan); color: var(--on-cyan); display: grid; place-items: center; font-size: 34px; font-weight: 700 }
+.sentbox h3 { margin: 0; font-size: 22px }
+.sentbox .code { font-family: var(--font-display); font-size: 20px; color: var(--cyan); letter-spacing: .04em }
+.sentbox p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.6 }
+.sentbox p b { color: var(--fg) }
+.sentbox .acts { display: grid; gap: 8px; margin-top: 4px }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(140px + env(safe-area-inset-bottom, 0px)); background: var(--cyan); color: var(--on-cyan); font-weight: 600; padding: 9px 16px; border-radius: 10px; font-size: 15px; max-width: calc(100vw - 32px); z-index: 9; text-align: center }
 @media (prefers-reduced-motion: reduce) { .size:active { transform: none } }
 </style>
@@ -257,6 +265,19 @@ details > summary { cursor: pointer; color: var(--cyan); font-size: 14px }
 </nav>
 <div class="win" id="win" hidden role="dialog" aria-modal="true" aria-labelledby="winName">
   <div class="winbox" id="winBox"></div>
+</div>
+<div class="sent" id="sent" hidden role="dialog" aria-modal="true" aria-labelledby="sentH">
+  <div class="sentbox">
+    <div class="ok" aria-hidden="true">✓</div>
+    <h3 id="sentH">ສົ່ງອໍເດີແລ້ວ</h3>
+    <div class="code" id="sentCode"></div>
+    <p>ຍອດ <b id="sentSum"></b></p>
+    <p>ຮ້ານກຳລັງກວດສະລິບ ແລະ ຈະຢືນຢັນທາງ WhatsApp ໄວໆນີ້ 🙏<br>ຢ່າລືມ <b>ແນບຮູບສະລິບ</b> ໃນແຊັດດຽວກັນ</p>
+    <div class="acts">
+      <button type="button" class="btn primary" id="sentNew">ສັ່ງອໍເດີໃໝ່</button>
+      <button type="button" class="btn" id="sentBack">ປິດ</button>
+    </div>
+  </div>
 </div>
 <div class="toast" id="toast" hidden></div>
 <img id="qrMark" src="__MARK__" alt="" hidden>
@@ -505,7 +526,12 @@ function markTabs() {
     if (i === cur) t.setAttribute("aria-current", "step"); else t.removeAttribute("aria-current"); });
 }
 for (const k of ["cName", "cPhone", "cNote"]) $("#" + k).addEventListener("input", () => { renderOrder(); markTabs(); save(); });
-$("#waBtn").addEventListener("click", e => { const bad = problem(); if (bad) { e.preventDefault(); shownErr = true; renderOrder(); go(bad.includes("ສິນຄ້າ") ? "shop" : "cart"); } });
+$("#waBtn").addEventListener("click", e => { const bad = problem(); if (bad) { e.preventDefault(); shownErr = true; renderOrder(); go(bad.includes("ສິນຄ້າ") ? "shop" : "cart"); return; }
+  /* after WhatsApp opens: tell the customer the order went to the shop (payment is confirmed by the shop, not by this page) */
+  $("#sentCode").textContent = "ລະຫັດອໍເດີ " + orderCode(); $("#sentSum").textContent = kip(total());
+  setTimeout(() => { $("#sent").hidden = false; }, 700); });
+$("#sentBack").addEventListener("click", () => { $("#sent").hidden = true; });
+$("#sentNew").addEventListener("click", () => { cart = {}; $("#sent").hidden = true; shownErr = false; render(); go("shop"); scrollTo(0, 0); });
 $("#copyBtn").addEventListener("click", () => {
   const txt = orderText(), ok = () => toast("ຄັດລອກແລ້ວ · ວາງໃນ WhatsApp ໄດ້ເລີຍ");
   const fail = () => { $("#otext").closest("details").open = true; const r = document.createRange(); r.selectNodeContents($("#otext")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast("ກົດຄ້າງທີ່ຂໍ້ຄວາມ ແລ້ວເລືອກ ຄັດລອກ"); };
