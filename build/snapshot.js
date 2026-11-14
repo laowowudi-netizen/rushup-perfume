@@ -13,7 +13,7 @@ const norm = n => String(n || "").toLowerCase().replace(/\s+/g, " ").trim();
 const ALIASES = { "lattfa khamrah": "lattafa khamrah" };
 const key = n => ALIASES[norm(n)] || norm(n);
 // Scents the owner asked to keep off the customer page for now (e.g. stock not arrived yet).
-const HIDDEN = new Set([]);
+const HIDDEN = new Set(["amaf club de nuit blue icon"]);
 const m = new Map();
 for (const b of bottles.filter(b => mlLeft(b) > 0 && !HIDDEN.has(key(b.name)))) {
   const k = key(b.name), cur = m.get(k);
