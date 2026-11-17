@@ -426,5 +426,21 @@
    "day",
    "work"
   ]
+ },
+ "liquid brun limited edition french avenue": {
+  "g": "M",
+  "s": [
+   "sweet",
+   "spicy"
+  ],
+  "t": "Citrus, Lavender, Cardamom",
+  "h": "Orange blossom, Guaiac wood, Rose",
+  "b": "Vanilla, Amber, Tonka, Oakmoss",
+  "u": [
+   "night",
+   "cool",
+   "event"
+  ],
+  "q": 1
  }
 }

@@ -26,7 +26,7 @@ const BRANDS = [[/^jpg\b|gaultier/i, "JPG"], [/\bysl\b|saint laurent/i, "YSL"], 
   [/^amaf|armaf/i, "Armaf"], [/latt?a?fa/i, "Lattafa"], [/versace/i, "Versace"], [/le labo/i, "Le Labo"], [/issey/i, "Issey Miyake"],
   [/acqua di parma/i, "Acqua di Parma"], [/ex nihilo/i, "Ex Nihilo"], [/kilian/i, "Kilian"], [/^lv\b|vuitton/i, "Louis Vuitton"],
   [/mancera/i, "Mancera"], [/marwa|arabiyat/i, "Arabiyat"], [/^mfk\b|kurkdjian/i, "MFK"], [/montblanc/i, "Montblanc"],
-  [/^pdm\b|de marly/i, "Parfums de Marly"], [/^ck\b|calvin klein/i, "Calvin Klein"], [/^bdk\b/i, "BDK"]];
+  [/^pdm\b|de marly/i, "Parfums de Marly"], [/^ck\b|calvin klein/i, "Calvin Klein"], [/^bdk\b/i, "BDK"], [/french avenue/i, "French Avenue"]];
 const brandOf = n => (BRANDS.find(([re]) => re.test(n)) || [, String(n).trim().split(/\s+/)[0]])[1];
 const skipped = [];
 const rows = [...m.values()].map(({ b, left, name }) => {
