@@ -28,7 +28,7 @@
   --r: 14px;
   --panel: #121417;          /* solid sheet behind windows and the order-sent card */
   --bar: #121417;
-  --search-bg: rgb(7 8 10 / .92);
+  --search-bg: #0a0c0e;
   --scrim: rgb(0 0 0 / .75);
   --placeholder: #6d757e;
   --ghost: #3a4048;          /* initials on a scent without a photo */
@@ -92,7 +92,12 @@ button { font: inherit; color: inherit }
 .chip small { color: var(--muted); font-weight: 500; font-size: 12px }
 .chip[aria-pressed="true"] { background: var(--cyan); border-color: var(--cyan); color: var(--on-cyan) }
 .chip[aria-pressed="true"] small { color: var(--on-cyan); opacity: .7 }
-.search { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; background: var(--search-bg); padding-block: 8px; margin-block: -8px }
+.search { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 3; padding-block: 8px; margin-block: -8px; isolation: isolate }
+/* no box around the search at rest; once it sticks to the top, a full-width solid strip slides in behind it */
+.search::before { content: ""; position: absolute; z-index: -1; inset: 0 calc(-1 * max(16px, env(safe-area-inset-right, 0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  background: var(--search-bg); border-bottom: 1px solid var(--line); opacity: 0; transition: opacity .2s ease }
+.search.stuck::before { opacity: 1 }
+@media (prefers-reduced-motion: reduce) { .search::before { transition: none } }
 input, textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px; width: 100%; min-width: 0; min-height: 48px }
 textarea { min-height: 84px; resize: vertical }
 input::placeholder, textarea::placeholder { color: var(--placeholder) }
@@ -568,6 +573,9 @@ $("#copyBtn").addEventListener("click", () => {
 });
 $("#qrMark").addEventListener("load", () => { lastQR = -1; renderCart(); });
 
+/* the search strip only gets its background once it is stuck to the top of the screen */
+{ const sb = $(".search"), stick = () => sb.classList.toggle("stuck", sb.getBoundingClientRect().top <= parseFloat(getComputedStyle(sb).top) + 1);
+  addEventListener("scroll", stick, { passive: true }); addEventListener("resize", stick); stick(); }
 const d = new Date(STOCK.at);
 $("#stamp").textContent = `ອັບເດດສະຕັອກ ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}, ${ITEMS.length} ກິ່ນ`;
 render();
