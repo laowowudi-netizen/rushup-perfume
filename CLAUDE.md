@@ -18,7 +18,7 @@ Bottle docs contain cost, profit and bottleCost: never commit them or show them 
 5. Delete `build/data` afterwards.
 
 ## Rules kept in build/snapshot.js
-- `HIDDEN`: scents the owner asked to keep off the page (currently YSL Y EDP, until new stock arrives).
+- `HIDDEN`: scents the owner asked to keep off the page (currently Club de Nuit Blue Iconic, Dior Homme EDT, Stronger With You Intensely).
 - `ALIASES`: two spellings of one scent shown once (Lattfa Khamrah -> Lattafa Khamrah).
 - `BRANDS`: brand chips. `MAX_PER_ML`: hides sizes whose price looks like a typo.
 - Photos: `build/img/map.json` (scent name -> webp). Notes: `build/notes.json` (shown because `build/notes.approved` exists).
