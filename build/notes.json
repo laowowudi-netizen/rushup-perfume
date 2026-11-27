@@ -442,5 +442,21 @@
    "event"
   ],
   "q": 1
+ },
+ "dior homme edt": {
+  "g": "M",
+  "s": [
+   "woody",
+   "fresh"
+  ],
+  "t": "Bergamot, Pink pepper, Elemi",
+  "h": "Atlas cedar, Cashmeran",
+  "b": "Vetiver, Patchouli, Musk",
+  "u": [
+   "day",
+   "work",
+   "cool"
+  ],
+  "q": 1
  }
 }
